@@ -1,5 +1,5 @@
-def print_customer(customer_id)
-    puts customer_id
+def print_customer(id)
+    puts id
 end
 
 

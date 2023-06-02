@@ -3,7 +3,7 @@
   "privadoCLIVersion" : "Not Detected",
   "privadoMainVersion" : "Not Detected",
   "privadoLanguageEngineVersion" : "1.1.1350+438-dd7e23aa",
-  "createdAt" : 1685701562452,
+  "createdAt" : 1685707219867,
   "repoName" : "sample_ruby",
   "language" : "ruby",
   "gitMetadata" : {
@@ -20,6 +20,8 @@
     "<operator>.+=",
     "<operator>.-=",
     "<operator>"
+  ],
+  "collections" : [
   ],
   "sources" : [
     {
@@ -45,18 +47,42 @@
       }
     }
   ],
-  "collections" : [
-  ],
   "sinkProcessing" : [
     {
       "sinkId" : "Leakages.Log.Console",
       "occurrences" : [
         {
           "sample" : "puts",
-          "lineNumber" : 2,
+          "lineNumber" : 30,
+          "columnNumber" : 0,
+          "fileName" : "/home/midas/Privado/repos/sample_ruby/sample.rb",
+          "excerpt" : "end\n\n\ne = d\n\nputs e /* <=== <unknownfullname> */ "
+        }
+      ]
+    }
+  ],
+  "processing" : [
+    {
+      "sourceId" : "Data.Sensitive.AccountData.AccountID",
+      "occurrences" : [
+        {
+          "sample" : "customer_id",
+          "lineNumber" : 4,
           "columnNumber" : 4,
-          "fileName" : "/home/midas/Privado/repos/sample_ruby/sink.rb",
-          "excerpt" : "def print_customer(id)\n    puts id /* <=== <unknownfullname> */ \nend\n\n\n\n"
+          "fileName" : "/home/midas/Privado/repos/sample_ruby/source.rb",
+          "excerpt" : "require './sink'\n\ndef get_customer_id\n    customer_id = \"abcde\" /* <=== ANY */ \n    return customer_id\nend\n\ndef process_customer\n    cus_id = get_customer_id()"
+        }
+      ]
+    },
+    {
+      "sourceId" : "Data.Sensitive.NationalIdentificationNumbers.Passport",
+      "occurrences" : [
+        {
+          "sample" : "passport_number",
+          "lineNumber" : 1,
+          "columnNumber" : 0,
+          "fileName" : "/home/midas/Privado/repos/sample_ruby/sample.rb",
+          "excerpt" : "passport_number = \"abc\" /* <=== ANY */ \ny = 1\na = passport_number\n\n\n"
         }
       ]
     }
@@ -82,37 +108,11 @@
           "sourceId" : "Data.Sensitive.NationalIdentificationNumbers.Passport",
           "sinkId" : "Leakages.Log.Console",
           "pathIds" : [
-            "9-16-15-24-23-22-34-33-45-44-43-59-58-57-63-62-65-64"
+            "15-22-21-30-29-28-40-39-51-50-49-65-64-63-69-68-71-70"
           ]
         }
       ],
       "processing" : null
-    }
-  ],
-  "processing" : [
-    {
-      "sourceId" : "Data.Sensitive.AccountData.AccountID",
-      "occurrences" : [
-        {
-          "sample" : "customer_id",
-          "lineNumber" : 5,
-          "columnNumber" : 11,
-          "fileName" : "/home/midas/Privado/repos/sample_ruby/source.rb",
-          "excerpt" : "require './sink'\n\ndef get_customer_id\n    customer_id = \"abcde\"\n    return customer_id /* <=== ANY */ \nend\n\ndef process_customer\n    cus_id = get_customer_id()\n    print_customer(cus_id)"
-        }
-      ]
-    },
-    {
-      "sourceId" : "Data.Sensitive.NationalIdentificationNumbers.Passport",
-      "occurrences" : [
-        {
-          "sample" : "passport_number",
-          "lineNumber" : 3,
-          "columnNumber" : 4,
-          "fileName" : "/home/midas/Privado/repos/sample_ruby/sample.rb",
-          "excerpt" : "passport_number = \"abc\"\ny = 1\na = passport_number /* <=== ANY */ \n\n\n\nif y < 2\n    b = a + 1"
-        }
-      ]
     }
   ],
   "sinks" : [
@@ -160,7 +160,7 @@
             },
             "paths" : [
               {
-                "pathId" : "9-16-15-24-23-22-34-33-45-44-43-59-58-57-63-62-65-64",
+                "pathId" : "15-22-21-30-29-28-40-39-51-50-49-65-64-63-69-68-71-70",
                 "path" : [
                   {
                     "sample" : "passport_number",

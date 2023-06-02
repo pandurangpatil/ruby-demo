@@ -1,0 +1,301 @@
+{
+  "privadoCoreVersion" : "Not Detected",
+  "privadoCLIVersion" : "Not Detected",
+  "privadoMainVersion" : "Not Detected",
+  "privadoLanguageEngineVersion" : "1.1.1350+438-dd7e23aa",
+  "createdAt" : 1685701562452,
+  "repoName" : "sample_ruby",
+  "language" : "ruby",
+  "gitMetadata" : {
+    "branchName" : "main",
+    "commitId" : "9ccb3dbc74cb8540f4f122866674d5482e9d1b40",
+    "remoteUrl" : "https://github.com/karan-batavia/ruby-demo.git"
+  },
+  "localScanPath" : "/home/midas/Privado/repos/sample_ruby",
+  "probableSinks" : [
+    "<operator>.=",
+    "<operator>.<",
+    "<operator>.+",
+    "<operator>.>",
+    "<operator>.+=",
+    "<operator>.-=",
+    "<operator>"
+  ],
+  "sources" : [
+    {
+      "sourceType" : "Data Element",
+      "id" : "Data.Sensitive.NationalIdentificationNumbers.Passport",
+      "name" : "Passport",
+      "category" : "National Identification Numbers",
+      "sensitivity" : "high",
+      "isSensitive" : false,
+      "tags" : {
+        "law" : "GDPR"
+      }
+    },
+    {
+      "sourceType" : "Data Element",
+      "id" : "Data.Sensitive.AccountData.AccountID",
+      "name" : "Account ID",
+      "category" : "Account Data",
+      "sensitivity" : "medium",
+      "isSensitive" : false,
+      "tags" : {
+        "law" : "GDPR"
+      }
+    }
+  ],
+  "collections" : [
+  ],
+  "sinkProcessing" : [
+    {
+      "sinkId" : "Leakages.Log.Console",
+      "occurrences" : [
+        {
+          "sample" : "puts",
+          "lineNumber" : 2,
+          "columnNumber" : 4,
+          "fileName" : "/home/midas/Privado/repos/sample_ruby/sink.rb",
+          "excerpt" : "def print_customer(id)\n    puts id /* <=== <unknownfullname> */ \nend\n\n\n\n"
+        }
+      ]
+    }
+  ],
+  "violations" : [
+    {
+      "policyId" : "Threats.Leakage.isDataLeakingToLog",
+      "policyDetails" : {
+        "name" : "PII data is written to the log files",
+        "policyType" : "threat",
+        "description" : "Sensitive Data written to log files or file system may lead to unauthorized access or exposure to potential attack.",
+        "fix" : "It is not recommended to log Sensitive Data to log files or the file system. The data must be encrypted if it is absolutely necessary to log it.",
+        "action" : "",
+        "tags" : {
+          "CWE-359" : "https://cwe.mitre.org/data/definitions/359.html",
+          "CWE-532" : "https://cwe.mitre.org/data/definitions/532.html",
+          "MSTG-STORAGE-3" : "https://github.com/OWASP/owasp-mstg/blob/master/Document/0x05d-Testing-Data-Storage.md#Testing-Logs-for-Sensitive-Data-MSTG-STORAGE-3",
+          "MITRE" : "Sharing.Exposure"
+        }
+      },
+      "dataFlow" : [
+        {
+          "sourceId" : "Data.Sensitive.NationalIdentificationNumbers.Passport",
+          "sinkId" : "Leakages.Log.Console",
+          "pathIds" : [
+            "9-16-15-24-23-22-34-33-45-44-43-59-58-57-63-62-65-64"
+          ]
+        }
+      ],
+      "processing" : null
+    }
+  ],
+  "processing" : [
+    {
+      "sourceId" : "Data.Sensitive.AccountData.AccountID",
+      "occurrences" : [
+        {
+          "sample" : "customer_id",
+          "lineNumber" : 5,
+          "columnNumber" : 11,
+          "fileName" : "/home/midas/Privado/repos/sample_ruby/source.rb",
+          "excerpt" : "require './sink'\n\ndef get_customer_id\n    customer_id = \"abcde\"\n    return customer_id /* <=== ANY */ \nend\n\ndef process_customer\n    cus_id = get_customer_id()\n    print_customer(cus_id)"
+        }
+      ]
+    },
+    {
+      "sourceId" : "Data.Sensitive.NationalIdentificationNumbers.Passport",
+      "occurrences" : [
+        {
+          "sample" : "passport_number",
+          "lineNumber" : 3,
+          "columnNumber" : 4,
+          "fileName" : "/home/midas/Privado/repos/sample_ruby/sample.rb",
+          "excerpt" : "passport_number = \"abc\"\ny = 1\na = passport_number /* <=== ANY */ \n\n\n\nif y < 2\n    b = a + 1"
+        }
+      ]
+    }
+  ],
+  "sinks" : [
+    {
+      "sourceType" : "Sinks",
+      "sinkType" : "leakages",
+      "id" : "Leakages.Log.Console",
+      "name" : "Log Console",
+      "domains" : [
+      ],
+      "apiUrl" : [
+      ],
+      "databaseDetails" : {
+        "dbName" : "",
+        "dbVendor" : "",
+        "dbLocation" : "",
+        "dbOperation" : ""
+      }
+    }
+  ],
+  "dataFlow" : {
+    "leakages" : [
+      {
+        "sourceId" : "Data.Sensitive.NationalIdentificationNumbers.Passport",
+        "sinks" : [
+          {
+            "sinkType" : "leakages",
+            "id" : "Leakages.Log.Console",
+            "name" : "Log Console",
+            "category" : "",
+            "domains" : [
+            ],
+            "sensitivity" : "",
+            "isSensitive" : false,
+            "tags" : {
+              
+            },
+            "apiUrl" : [
+            ],
+            "databaseDetails" : {
+              "dbName" : "",
+              "dbVendor" : "",
+              "dbLocation" : "",
+              "dbOperation" : ""
+            },
+            "paths" : [
+              {
+                "pathId" : "9-16-15-24-23-22-34-33-45-44-43-59-58-57-63-62-65-64",
+                "path" : [
+                  {
+                    "sample" : "passport_number",
+                    "lineNumber" : 1,
+                    "columnNumber" : 0,
+                    "fileName" : "/home/midas/Privado/repos/sample_ruby/sample.rb",
+                    "excerpt" : "passport_number = \"abc\" /* <=== ANY */ \ny = 1\na = passport_number\n\n\n"
+                  },
+                  {
+                    "sample" : "passport_number",
+                    "lineNumber" : 3,
+                    "columnNumber" : 4,
+                    "fileName" : "/home/midas/Privado/repos/sample_ruby/sample.rb",
+                    "excerpt" : "passport_number = \"abc\"\ny = 1\na = passport_number /* <=== ANY */ \n\n\n\nif y < 2\n    b = a + 1"
+                  },
+                  {
+                    "sample" : "a",
+                    "lineNumber" : 3,
+                    "columnNumber" : 0,
+                    "fileName" : "/home/midas/Privado/repos/sample_ruby/sample.rb",
+                    "excerpt" : "passport_number = \"abc\"\ny = 1\na = passport_number /* <=== ANY */ \n\n\n\nif y < 2\n    b = a + 1"
+                  },
+                  {
+                    "sample" : "a",
+                    "lineNumber" : 8,
+                    "columnNumber" : 8,
+                    "fileName" : "/home/midas/Privado/repos/sample_ruby/sample.rb",
+                    "excerpt" : "a = passport_number\n\n\n\nif y < 2\n    b = a + 1 /* <=== ANY */ \nelse\n    b = a + 2\nend\n\n"
+                  },
+                  {
+                    "sample" : "+",
+                    "lineNumber" : 8,
+                    "columnNumber" : 10,
+                    "fileName" : "/home/midas/Privado/repos/sample_ruby/sample.rb",
+                    "excerpt" : "a = passport_number\n\n\n\nif y < 2\n    b = a + 1 /* <===  */ \nelse\n    b = a + 2\nend\n\n"
+                  },
+                  {
+                    "sample" : "b",
+                    "lineNumber" : 8,
+                    "columnNumber" : 4,
+                    "fileName" : "/home/midas/Privado/repos/sample_ruby/sample.rb",
+                    "excerpt" : "a = passport_number\n\n\n\nif y < 2\n    b = a + 1 /* <=== ANY */ \nelse\n    b = a + 2\nend\n\n"
+                  },
+                  {
+                    "sample" : "b",
+                    "lineNumber" : 14,
+                    "columnNumber" : 4,
+                    "fileName" : "/home/midas/Privado/repos/sample_ruby/sample.rb",
+                    "excerpt" : "else\n    b = a + 2\nend\n\n\nz = b /* <=== ANY */ \n\nx = 4\nwhile x > 0\n    c += z + 2\n    x -= 1"
+                  },
+                  {
+                    "sample" : "z",
+                    "lineNumber" : 14,
+                    "columnNumber" : 0,
+                    "fileName" : "/home/midas/Privado/repos/sample_ruby/sample.rb",
+                    "excerpt" : "else\n    b = a + 2\nend\n\n\nz = b /* <=== ANY */ \n\nx = 4\nwhile x > 0\n    c += z + 2\n    x -= 1"
+                  },
+                  {
+                    "sample" : "z",
+                    "lineNumber" : 18,
+                    "columnNumber" : 9,
+                    "fileName" : "/home/midas/Privado/repos/sample_ruby/sample.rb",
+                    "excerpt" : "\nz = b\n\nx = 4\nwhile x > 0\n    c += z + 2 /* <=== ANY */ \n    x -= 1\nend\n\n\nfor j in 1..5"
+                  },
+                  {
+                    "sample" : "+",
+                    "lineNumber" : 18,
+                    "columnNumber" : 11,
+                    "fileName" : "/home/midas/Privado/repos/sample_ruby/sample.rb",
+                    "excerpt" : "\nz = b\n\nx = 4\nwhile x > 0\n    c += z + 2 /* <===  */ \n    x -= 1\nend\n\n\nfor j in 1..5"
+                  },
+                  {
+                    "sample" : "c",
+                    "lineNumber" : 18,
+                    "columnNumber" : 4,
+                    "fileName" : "/home/midas/Privado/repos/sample_ruby/sample.rb",
+                    "excerpt" : "\nz = b\n\nx = 4\nwhile x > 0\n    c += z + 2 /* <=== ANY */ \n    x -= 1\nend\n\n\nfor j in 1..5"
+                  },
+                  {
+                    "sample" : "c",
+                    "lineNumber" : 24,
+                    "columnNumber" : 9,
+                    "fileName" : "/home/midas/Privado/repos/sample_ruby/sample.rb",
+                    "excerpt" : "    x -= 1\nend\n\n\nfor j in 1..5\n    d -= c + 2 /* <=== ANY */ \nend\n\n\ne = d\n"
+                  },
+                  {
+                    "sample" : "+",
+                    "lineNumber" : 24,
+                    "columnNumber" : 11,
+                    "fileName" : "/home/midas/Privado/repos/sample_ruby/sample.rb",
+                    "excerpt" : "    x -= 1\nend\n\n\nfor j in 1..5\n    d -= c + 2 /* <===  */ \nend\n\n\ne = d\n"
+                  },
+                  {
+                    "sample" : "d",
+                    "lineNumber" : 24,
+                    "columnNumber" : 4,
+                    "fileName" : "/home/midas/Privado/repos/sample_ruby/sample.rb",
+                    "excerpt" : "    x -= 1\nend\n\n\nfor j in 1..5\n    d -= c + 2 /* <=== ANY */ \nend\n\n\ne = d\n"
+                  },
+                  {
+                    "sample" : "d",
+                    "lineNumber" : 28,
+                    "columnNumber" : 4,
+                    "fileName" : "/home/midas/Privado/repos/sample_ruby/sample.rb",
+                    "excerpt" : "for j in 1..5\n    d -= c + 2\nend\n\n\ne = d /* <=== ANY */ \n\nputs e"
+                  },
+                  {
+                    "sample" : "e",
+                    "lineNumber" : 28,
+                    "columnNumber" : 0,
+                    "fileName" : "/home/midas/Privado/repos/sample_ruby/sample.rb",
+                    "excerpt" : "for j in 1..5\n    d -= c + 2\nend\n\n\ne = d /* <=== ANY */ \n\nputs e"
+                  },
+                  {
+                    "sample" : "e",
+                    "lineNumber" : 30,
+                    "columnNumber" : 5,
+                    "fileName" : "/home/midas/Privado/repos/sample_ruby/sample.rb",
+                    "excerpt" : "end\n\n\ne = d\n\nputs e /* <=== ANY */ "
+                  },
+                  {
+                    "sample" : "puts",
+                    "lineNumber" : 30,
+                    "columnNumber" : 0,
+                    "fileName" : "/home/midas/Privado/repos/sample_ruby/sample.rb",
+                    "excerpt" : "end\n\n\ne = d\n\nputs e /* <=== <unknownfullname> */ "
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "third_parties" : [
+    ]
+  }
+}

@@ -1,4 +1,4 @@
-require './twilio_integration'
+require_relative './twilio_integration'
 
 twilio = TwilioIntegration.new
 

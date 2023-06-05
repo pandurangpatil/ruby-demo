@@ -3,7 +3,7 @@
   "privadoCLIVersion" : "Not Detected",
   "privadoMainVersion" : "Not Detected",
   "privadoLanguageEngineVersion" : "1.1.1350+438-dd7e23aa",
-  "createdAt" : 1685707219867,
+  "createdAt" : 1685709187364,
   "repoName" : "sample_ruby",
   "language" : "ruby",
   "gitMetadata" : {
@@ -14,16 +14,26 @@
   "localScanPath" : "/home/midas/Privado/repos/sample_ruby",
   "probableSinks" : [
     "<operator>.=",
+    "<operator>",
+    "<operator>.+=",
     "<operator>.<",
     "<operator>.+",
     "<operator>.>",
-    "<operator>.+=",
     "<operator>.-=",
-    "<operator>"
-  ],
-  "collections" : [
+    "<operator>.>="
   ],
   "sources" : [
+    {
+      "sourceType" : "Data Element",
+      "id" : "Data.Sensitive.FinancialData.CardNumber",
+      "name" : "Card Number",
+      "category" : "Financial Data",
+      "sensitivity" : "high",
+      "isSensitive" : false,
+      "tags" : {
+        "law" : "GDPR"
+      }
+    },
     {
       "sourceType" : "Data Element",
       "id" : "Data.Sensitive.NationalIdentificationNumbers.Passport",
@@ -37,15 +47,17 @@
     },
     {
       "sourceType" : "Data Element",
-      "id" : "Data.Sensitive.AccountData.AccountID",
-      "name" : "Account ID",
-      "category" : "Account Data",
-      "sensitivity" : "medium",
+      "id" : "Data.Sensitive.PersonalIdentification.FirstName",
+      "name" : "First Name",
+      "category" : "Personal Identification",
+      "sensitivity" : "low",
       "isSensitive" : false,
       "tags" : {
         "law" : "GDPR"
       }
     }
+  ],
+  "collections" : [
   ],
   "sinkProcessing" : [
     {
@@ -53,24 +65,36 @@
       "occurrences" : [
         {
           "sample" : "puts",
-          "lineNumber" : 30,
+          "lineNumber" : 7,
           "columnNumber" : 0,
-          "fileName" : "/home/midas/Privado/repos/sample_ruby/sample.rb",
-          "excerpt" : "end\n\n\ne = d\n\nputs e /* <=== <unknownfullname> */ "
+          "fileName" : "/home/midas/Privado/repos/sample_ruby/for.rb",
+          "excerpt" : "\nfor j in 1..5\n    dl_number += \"<province_name>\"\nend\n\nputs dl_number /* <=== <unknownfullname> */ "
         }
       ]
     }
   ],
   "processing" : [
     {
-      "sourceId" : "Data.Sensitive.AccountData.AccountID",
+      "sourceId" : "Data.Sensitive.FinancialData.CardNumber",
       "occurrences" : [
         {
-          "sample" : "customer_id",
-          "lineNumber" : 4,
+          "sample" : "credit_card_number",
+          "lineNumber" : 1,
+          "columnNumber" : 0,
+          "fileName" : "/home/midas/Privado/repos/sample_ruby/if_else.rb",
+          "excerpt" : "credit_card_number = 123 /* <=== ANY */ \n\nz = credit_card_number\n\nif credit_card_number < 1000\n    z += 100"
+        }
+      ]
+    },
+    {
+      "sourceId" : "Data.Sensitive.PersonalIdentification.FirstName",
+      "occurrences" : [
+        {
+          "sample" : "first_name",
+          "lineNumber" : 3,
           "columnNumber" : 4,
-          "fileName" : "/home/midas/Privado/repos/sample_ruby/source.rb",
-          "excerpt" : "require './sink'\n\ndef get_customer_id\n    customer_id = \"abcde\" /* <=== ANY */ \n    return customer_id\nend\n\ndef process_customer\n    cus_id = get_customer_id()"
+          "fileName" : "/home/midas/Privado/repos/sample_ruby/while.rb",
+          "excerpt" : "first_name = \"spongebob\"\n\nb = first_name /* <=== ANY */ \nz = 10\n\nwhile z >= 0\n    b += \"square pants\"\n    z -= 1"
         }
       ]
     },
@@ -85,34 +109,6 @@
           "excerpt" : "passport_number = \"abc\" /* <=== ANY */ \ny = 1\na = passport_number\n\n\n"
         }
       ]
-    }
-  ],
-  "violations" : [
-    {
-      "policyId" : "Threats.Leakage.isDataLeakingToLog",
-      "policyDetails" : {
-        "name" : "PII data is written to the log files",
-        "policyType" : "threat",
-        "description" : "Sensitive Data written to log files or file system may lead to unauthorized access or exposure to potential attack.",
-        "fix" : "It is not recommended to log Sensitive Data to log files or the file system. The data must be encrypted if it is absolutely necessary to log it.",
-        "action" : "",
-        "tags" : {
-          "CWE-359" : "https://cwe.mitre.org/data/definitions/359.html",
-          "CWE-532" : "https://cwe.mitre.org/data/definitions/532.html",
-          "MSTG-STORAGE-3" : "https://github.com/OWASP/owasp-mstg/blob/master/Document/0x05d-Testing-Data-Storage.md#Testing-Logs-for-Sensitive-Data-MSTG-STORAGE-3",
-          "MITRE" : "Sharing.Exposure"
-        }
-      },
-      "dataFlow" : [
-        {
-          "sourceId" : "Data.Sensitive.NationalIdentificationNumbers.Passport",
-          "sinkId" : "Leakages.Log.Console",
-          "pathIds" : [
-            "15-22-21-30-29-28-40-39-51-50-49-65-64-63-69-68-71-70"
-          ]
-        }
-      ],
-      "processing" : null
     }
   ],
   "sinks" : [
@@ -160,7 +156,7 @@
             },
             "paths" : [
               {
-                "pathId" : "15-22-21-30-29-28-40-39-51-50-49-65-64-63-69-68-71-70",
+                "pathId" : "56-63-62-71-70-69-81-80-92-91-90-106-105-104-110-109-112-111",
                 "path" : [
                   {
                     "sample" : "passport_number",
@@ -293,9 +289,241 @@
             ]
           }
         ]
+      },
+      {
+        "sourceId" : "Data.Sensitive.FinancialData.CardNumber",
+        "sinks" : [
+          {
+            "sinkType" : "leakages",
+            "id" : "Leakages.Log.Console",
+            "name" : "Log Console",
+            "category" : "",
+            "domains" : [
+            ],
+            "sensitivity" : "",
+            "isSensitive" : false,
+            "tags" : {
+              
+            },
+            "apiUrl" : [
+            ],
+            "databaseDetails" : {
+              "dbName" : "",
+              "dbVendor" : "",
+              "dbLocation" : "",
+              "dbOperation" : ""
+            },
+            "paths" : [
+              {
+                "pathId" : "29-33-32-45-44-43-48-47",
+                "path" : [
+                  {
+                    "sample" : "credit_card_number",
+                    "lineNumber" : 1,
+                    "columnNumber" : 0,
+                    "fileName" : "/home/midas/Privado/repos/sample_ruby/if_else.rb",
+                    "excerpt" : "credit_card_number = 123 /* <=== ANY */ \n\nz = credit_card_number\n\nif credit_card_number < 1000\n    z += 100"
+                  },
+                  {
+                    "sample" : "credit_card_number",
+                    "lineNumber" : 3,
+                    "columnNumber" : 4,
+                    "fileName" : "/home/midas/Privado/repos/sample_ruby/if_else.rb",
+                    "excerpt" : "credit_card_number = 123\n\nz = credit_card_number /* <=== ANY */ \n\nif credit_card_number < 1000\n    z += 100\nelse\n    z = z + 10"
+                  },
+                  {
+                    "sample" : "z",
+                    "lineNumber" : 3,
+                    "columnNumber" : 0,
+                    "fileName" : "/home/midas/Privado/repos/sample_ruby/if_else.rb",
+                    "excerpt" : "credit_card_number = 123\n\nz = credit_card_number /* <=== ANY */ \n\nif credit_card_number < 1000\n    z += 100\nelse\n    z = z + 10"
+                  },
+                  {
+                    "sample" : "z",
+                    "lineNumber" : 8,
+                    "columnNumber" : 8,
+                    "fileName" : "/home/midas/Privado/repos/sample_ruby/if_else.rb",
+                    "excerpt" : "z = credit_card_number\n\nif credit_card_number < 1000\n    z += 100\nelse\n    z = z + 10 /* <=== ANY */ \nend\n\nputs z"
+                  },
+                  {
+                    "sample" : "+",
+                    "lineNumber" : 8,
+                    "columnNumber" : 10,
+                    "fileName" : "/home/midas/Privado/repos/sample_ruby/if_else.rb",
+                    "excerpt" : "z = credit_card_number\n\nif credit_card_number < 1000\n    z += 100\nelse\n    z = z + 10 /* <===  */ \nend\n\nputs z"
+                  },
+                  {
+                    "sample" : "z",
+                    "lineNumber" : 8,
+                    "columnNumber" : 4,
+                    "fileName" : "/home/midas/Privado/repos/sample_ruby/if_else.rb",
+                    "excerpt" : "z = credit_card_number\n\nif credit_card_number < 1000\n    z += 100\nelse\n    z = z + 10 /* <=== ANY */ \nend\n\nputs z"
+                  },
+                  {
+                    "sample" : "z",
+                    "lineNumber" : 11,
+                    "columnNumber" : 5,
+                    "fileName" : "/home/midas/Privado/repos/sample_ruby/if_else.rb",
+                    "excerpt" : "    z += 100\nelse\n    z = z + 10\nend\n\nputs z /* <=== ANY */ "
+                  },
+                  {
+                    "sample" : "puts",
+                    "lineNumber" : 11,
+                    "columnNumber" : 0,
+                    "fileName" : "/home/midas/Privado/repos/sample_ruby/if_else.rb",
+                    "excerpt" : "    z += 100\nelse\n    z = z + 10\nend\n\nputs z /* <=== <unknownfullname> */ "
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "sourceId" : "Data.Sensitive.PersonalIdentification.FirstName",
+        "sinks" : [
+          {
+            "sinkType" : "leakages",
+            "id" : "Leakages.Log.Console",
+            "name" : "Log Console",
+            "category" : "",
+            "domains" : [
+            ],
+            "sensitivity" : "",
+            "isSensitive" : false,
+            "tags" : {
+              
+            },
+            "apiUrl" : [
+            ],
+            "databaseDetails" : {
+              "dbName" : "",
+              "dbVendor" : "",
+              "dbLocation" : "",
+              "dbOperation" : ""
+            },
+            "paths" : [
+              {
+                "pathId" : "120-124-123-133-139-138",
+                "path" : [
+                  {
+                    "sample" : "first_name",
+                    "lineNumber" : 1,
+                    "columnNumber" : 0,
+                    "fileName" : "/home/midas/Privado/repos/sample_ruby/while.rb",
+                    "excerpt" : "first_name = \"spongebob\" /* <=== ANY */ \n\nb = first_name\nz = 10\n\nwhile z >= 0"
+                  },
+                  {
+                    "sample" : "first_name",
+                    "lineNumber" : 3,
+                    "columnNumber" : 4,
+                    "fileName" : "/home/midas/Privado/repos/sample_ruby/while.rb",
+                    "excerpt" : "first_name = \"spongebob\"\n\nb = first_name /* <=== ANY */ \nz = 10\n\nwhile z >= 0\n    b += \"square pants\"\n    z -= 1"
+                  },
+                  {
+                    "sample" : "b",
+                    "lineNumber" : 3,
+                    "columnNumber" : 0,
+                    "fileName" : "/home/midas/Privado/repos/sample_ruby/while.rb",
+                    "excerpt" : "first_name = \"spongebob\"\n\nb = first_name /* <=== ANY */ \nz = 10\n\nwhile z >= 0\n    b += \"square pants\"\n    z -= 1"
+                  },
+                  {
+                    "sample" : "b",
+                    "lineNumber" : 7,
+                    "columnNumber" : 4,
+                    "fileName" : "/home/midas/Privado/repos/sample_ruby/while.rb",
+                    "excerpt" : "\nb = first_name\nz = 10\n\nwhile z >= 0\n    b += \"square pants\" /* <=== ANY */ \n    z -= 1\nend\n\nputs b"
+                  },
+                  {
+                    "sample" : "b",
+                    "lineNumber" : 11,
+                    "columnNumber" : 5,
+                    "fileName" : "/home/midas/Privado/repos/sample_ruby/while.rb",
+                    "excerpt" : "while z >= 0\n    b += \"square pants\"\n    z -= 1\nend\n\nputs b /* <=== ANY */ "
+                  },
+                  {
+                    "sample" : "puts",
+                    "lineNumber" : 11,
+                    "columnNumber" : 0,
+                    "fileName" : "/home/midas/Privado/repos/sample_ruby/while.rb",
+                    "excerpt" : "while z >= 0\n    b += \"square pants\"\n    z -= 1\nend\n\nputs b /* <=== <unknownfullname> */ "
+                  }
+                ]
+              }
+            ]
+          }
+        ]
       }
     ],
     "third_parties" : [
     ]
-  }
+  },
+  "violations" : [
+    {
+      "policyId" : "Policy.Allow.Processing.FinancialData",
+      "policyDetails" : {
+        "name" : "Example: Don't use financial data outside of payments services",
+        "policyType" : "compliance",
+        "description" : "Policy to allow processing Financial Information only in payments services",
+        "fix" : "Talk to the Data Protection team: dataprotection@org.com",
+        "action" : "allow",
+        "tags" : {
+          "policyPurpose" : "Security Audit"
+        }
+      },
+      "dataFlow" : null,
+      "processing" : [
+        {
+          "sourceId" : "Data.Sensitive.FinancialData.CardNumber",
+          "occurrence" : {
+            "sample" : "credit_card_number",
+            "lineNumber" : 1,
+            "columnNumber" : 0,
+            "fileName" : "/home/midas/Privado/repos/sample_ruby/if_else.rb",
+            "excerpt" : "credit_card_number = 123 /* <=== ANY */ \n\nz = credit_card_number\n\nif credit_card_number < 1000\n    z += 100"
+          }
+        }
+      ]
+    },
+    {
+      "policyId" : "Threats.Leakage.isDataLeakingToLog",
+      "policyDetails" : {
+        "name" : "PII data is written to the log files",
+        "policyType" : "threat",
+        "description" : "Sensitive Data written to log files or file system may lead to unauthorized access or exposure to potential attack.",
+        "fix" : "It is not recommended to log Sensitive Data to log files or the file system. The data must be encrypted if it is absolutely necessary to log it.",
+        "action" : "",
+        "tags" : {
+          "CWE-359" : "https://cwe.mitre.org/data/definitions/359.html",
+          "CWE-532" : "https://cwe.mitre.org/data/definitions/532.html",
+          "MSTG-STORAGE-3" : "https://github.com/OWASP/owasp-mstg/blob/master/Document/0x05d-Testing-Data-Storage.md#Testing-Logs-for-Sensitive-Data-MSTG-STORAGE-3",
+          "MITRE" : "Sharing.Exposure"
+        }
+      },
+      "dataFlow" : [
+        {
+          "sourceId" : "Data.Sensitive.FinancialData.CardNumber",
+          "sinkId" : "Leakages.Log.Console",
+          "pathIds" : [
+            "29-33-32-45-44-43-48-47"
+          ]
+        },
+        {
+          "sourceId" : "Data.Sensitive.NationalIdentificationNumbers.Passport",
+          "sinkId" : "Leakages.Log.Console",
+          "pathIds" : [
+            "56-63-62-71-70-69-81-80-92-91-90-106-105-104-110-109-112-111"
+          ]
+        },
+        {
+          "sourceId" : "Data.Sensitive.PersonalIdentification.FirstName",
+          "sinkId" : "Leakages.Log.Console",
+          "pathIds" : [
+            "120-124-123-133-139-138"
+          ]
+        }
+      ],
+      "processing" : null
+    }
+  ]
 }

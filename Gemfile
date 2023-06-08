@@ -1,3 +1,8 @@
 source 'https://rubygems.org'
 gem 'stripe'
 gem 'twilio-ruby'
+gem 'redis'
+gem 'pg'
+# gem 'mysql2'
+gem 'sequel'
+gem 'mongo'

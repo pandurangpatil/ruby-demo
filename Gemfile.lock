@@ -1,17 +1,27 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    bson (4.15.0)
+    connection_pool (2.4.1)
     faraday (2.7.5)
       faraday-net_http (>= 2.0, < 3.1)
       ruby2_keywords (>= 0.0.4)
     faraday-net_http (3.0.2)
     jwt (2.7.0)
     mini_portile2 (2.8.2)
+    mongo (2.18.2)
+      bson (>= 4.14.1, < 5.0.0)
     nokogiri (1.15.2)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
+    pg (1.5.3)
     racc (1.6.2)
+    redis (5.0.6)
+      redis-client (>= 0.9.0)
+    redis-client (0.14.1)
+      connection_pool
     ruby2_keywords (0.0.5)
+    sequel (5.69.0)
     stripe (8.5.0)
     twilio-ruby (6.0.2)
       faraday (>= 0.9, < 3.0)
@@ -22,6 +32,10 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  mongo
+  pg
+  redis
+  sequel
   stripe
   twilio-ruby
 
